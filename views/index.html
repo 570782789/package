@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>index</title>
+		<link rel="stylesheet" href="css/index.css" />
+		<link rel="stylesheet" href="css/bootstrap/3.3.6/bootstrap.min.css" />
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/index.js"></script>
+		<script src="js/check.js"></script>
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="cover" onclick="no_addList()"></div>
+			<div id="addList">
+				<form class="form-inline" method="post" action="/addList" onsubmit="return check_list()">
+					<div class="form-group">
+						<input type="text" class="form-control" name="listName" id="addList_input" placeholder="列表名">
+					</div>
+					<button type="submit" class="btn btn-primary">提 交</button>
+				</form>
+			</div>
+			<div id="covers" onclick="no_addthings()"></div>
+			<div id="addthings">
+			    <tr>
+						<form method="post" id="myform" action="/addThing?list=<%=list_flag %>" onsubmit="return check_form()">
+							<td>
+								<input type="text" name="title" id="title" class="form-control" placeholder="标题">
+							</td>
+							<div class="sparator" style="color:lightblue;">|</div>
+							<td>
+								<input type="text" name="year" id="year" class="form-control time" placeholder="年">
+								<div class="sparator" style="color:lightblue;">|</div>
+								<input type="text" name="month" id="month" class="form-control time" placeholder="月">
+								<div class="sparator" style="color:lightblue;">|</div>
+								<input type="text" name="day" id="day" class="form-control time" placeholder="日">
+							</td>
+							<td>
+								<label class="radio-inline">
+								  <input type="radio" name="urgent" id="urg1" value="1" checked="checked"> 一般
+								</label>
+								<label class="radio-inline">
+								  <input type="radio" name="urgent" id="urg2" value="2"> 重要
+								</label>
+								<label class="radio-inline">
+								  <input type="radio" name="urgent" id="urg3" value="3"> 很重要
+								</label>
+								<div class="clear"></div>
+							</td>
+							<td>
+								<input type="text" name="message" id="message" class="form-control" style="margin-top:10px;" placeholder="备注">
+							</td>
+							<td colspan="2">
+								<button type="submit"  class="btn btn-primary" style="margin-left:20px;width:30%;margin-top:30px;">提   交</button>
+								<button style="display: none;" id="quxiao" onclick="quxiao('<%=list_flag %>')" class="btn btn-orange">取   消</button>
+							</td>
+						</form>
+					</tr>
+			</div>
+				<div class="left" style="float:left;width:350px;">
+					<div class="header" style="float:left;width:350px;">
+						<img src="images/touxiang.jpg" id="picture"/>
+						<a class="navbar-brand" id="logout" href="/logout">退出</a>
+						<form class="navbar-form navbar-left" method="post" action="/search" onsubmit="return check_search()">
+							<div class="form-group">
+								<input type="text" id="search_input" name="search" class="form-control" placeholder="搜索">
+							</div>
+							<button type="submit" class="btn btn-default">
+							<span class="glyphicon glyphicon-search search_icon" aria-hidden="true"></span>
+						</button>
+						</form>
+					</div>
+
+					<div class="work" style="float:left;width:350px;">
+						<ul class="nav nav-pills nav-stacked">
+							<li <%if(list_flag==1 ){%> class="active"<%} %> >
+								<a href="/index?list=1" class="glyphicon glyphicon-certificate">&nbsp;我的一天
+								    <span class="badge" style="float:right;background-color:red;">3</span>
+								</a>
+							</li>
+							<li <%if(list_flag==2 ){%> class="active"<%} %> >
+								<a href="/index?list=2"  class="glyphicon glyphicon-home">&nbsp;TO-DO
+								     <span class="badge" style="float:right;background-color:red;">7</span>
+								</a>
+							</li>
+							<li <%if(list_flag==3 ){%> class="active"<%} %> >
+								<a href="/index?list=3" class="	glyphicon glyphicon-ok">&nbsp;已经完成
+								    <span class="badge" style="float:right;background-color:blue;">3</span>
+								</a>
+							</li>
+									<%for(var i=0;i<lists.length;i++){ %>
+									<li class="list" <%if(list_flag==lists[i].id){%> class="active"<%} %> >
+										<a style="float: left;" href="/index?list=<%=lists[i].id %>" class="glyphicon glyphicon-th-list">
+											<%=lists[i].title %>
+                                         </a>											
+										<span class="glyphicon glyphicon-minus-sign icon" onclick="removeList(<%=lists[i].id %>,<%=list_flag %>)"></span>
+									    <div class="clear"></div>
+									</li>
+									<%} %>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a href="#" onclick="addList()">
+											<span class="glyphicon glyphicon-plus"></span> &nbsp;&nbsp;&nbsp;新建列表
+										</a>
+									</li>
+						</ul>
+					</div>
+				</div>
+			<div class="right" style="float:right;width:950px;">
+			    <div id="titles" style="width:950px;height:100px;background-color:lightblue;">
+					 <%if(list_flag == 1){%>
+					   <span style="color:white;font-size:50px;margin-top:20px;float:left;">我的一天</span>
+					 <%}if(list_flag == 2){%>
+					   <span style="color:white;font-size:50px;margin-top:20px;float:left;">TO-DO</span>
+					 <%}if(list_flag == 3){%>
+					   <span style="color:white;font-size:50px;margin-top:20px;float:left;">已经完成</span>
+					 <%}%>
+					 <%for(var i=0;i<lists.length;i++){ %>
+					   <%if(list_flag==lists[i].id){%>
+					   <span style="color:white;font-size:50px;margin-top:20px;float:left;"><%=lists[i].title %><span>
+					   <%}%>
+					 <%}%>
+					 <%if(list_flag== -1){%>
+					   <span style="color:white;font-size:50px;margin-top:20px;float:left;">正在搜索代办清单...</span>
+					 <%}%>
+				</div>
+				<table class="table table-bordered table-striped table-hover" style="border: 0px solid transparent !important;">
+					<%if(contents.length == 0){ %>
+					<tr>
+						<td colspan="6">暂无任务，请新建任务</td>
+					</tr>
+					<%} %>
+					<%for(var i=0;i<contents.length;i++){ 
+						let color = "greenyellow";
+						let mess = "一般";
+						if(contents[i].urgent == 2){
+							color = "orange";
+							mess = "重要";
+						}else if(contents[i].urgent == 3){
+							color = "red";
+							mess = "很重要";
+						}
+						let done = contents[i].isdelete==1?"greenyellow":"orange";
+					%>
+					<tr >
+						<td style="border: 0px solid transparent !important;">
+							<%=contents[i].title %>
+						</td>
+						<td style="border: 0px solid transparent !important;">
+							<%=contents[i].time %>
+						</td>
+						<td style="color: <%=color %>;border: 0px solid transparent !important;">
+							<%=mess %>
+						</td>
+						<td style="color: <%=done %>;border: 0px solid transparent !important;">
+							<%=list_flag == 3?"已经完成":"正在进行" %>
+						</td>
+						<td style="border: 0px solid transparent !important;">
+							<%=contents[i].message %>
+						</td>
+						<td style="border: 0px solid transparent !important;">
+							<%if(list_flag != 3){ %>
+							<a href="/deleteThing?id=<%=contents[i].id %>&list=<%=list_flag %>">完成</a>
+							<a href="#" onclick="updateThing('<%=contents[i].title%>','<%=contents[i].message%>','<%=contents[i].time%>','<%=contents[i].urgent%>','<%=contents[i].id%>')">修改</a>
+							<%}else{ %>
+							<a href="/removeThing?id=<%=contents[i].id %>">彻底删除</a>
+							<%} %>
+						</td>
+					</tr>
+					<%} %>
+					<%if(list_flag != 3 && list_flag != -1){%>
+					   <td style="border: 0px solid transparent !important;">					  
+						<a href="#" onclick="addthings()">
+							<span class="glyphicon glyphicon-plus"></span> &nbsp;&nbsp;&nbsp;添加代办事项
+						</a>
+					   </td>
+					<%} %>
+				</table>
+			</div>
+		</div>
+	</body>
+
+</html>

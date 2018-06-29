@@ -1,0 +1,14 @@
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `lists`;
+CREATE TABLE `lists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) DEFAULT NULL,
+  `type` varchar(6) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+BEGIN;
+INSERT INTO `lists` VALUES ('4', '概率统计', null), ('5', 'WEB大作业', null);
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
